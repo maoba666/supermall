@@ -5,6 +5,7 @@
       <img :src="item" alt />
     </swiper-item>
   </swiper>
+  
 </template>
 
 <script>
@@ -23,6 +24,21 @@ export default {
       },
     },
   },
+  data(){
+return {
+  isZoom:true,
+  showImg:null
+}
+  },
+   methods: {
+      imgClick(item) {
+        this.isZoom = !this.isZoom
+        this.showImg = item;
+      },
+      imgLoad(){
+        this.$emit('imgLoad');
+      }
+    }
 
 };
 </script>

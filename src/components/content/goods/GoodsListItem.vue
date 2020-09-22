@@ -1,15 +1,15 @@
 <!--  -->
 <template>
   <div class="goods-list-item" @click="itemClick">
-    <img :src="goodsItem.show.img" class="img" @load="imgLoad" />
+    <img :src="showImage" class="img" @load="imgLoad" />
 
     <p>{{goodsItem.title}}</p>
     <div class="msg">
       <span class="price">
         <span>限时价</span>
-        {{goodsItem.price}}
+        {{showPrice}}
       </span>
-      <span class="collect">{{goodsItem.cfav}}</span>
+      <span class="collect">{{showOldPrice}}</span>
     </div>
     <button>立即购买</button>
   </div>
@@ -26,6 +26,34 @@ export default {
       },
     },
   },
+  computed: {
+      //根据服务器传过来的数据寻找图片显示
+      showImage() {
+        return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
+      },
+
+      //根据当前路由显示不同的价格
+      showPrice() {
+        if (this.$route.path.indexOf("/home") !== -1) {
+          return this.goodsItem.price;
+        } else if (this.$route.path.indexOf("/detail") !== -1) {
+          return this.goodsItem.discountPrice;
+        } else if (this.$route.path.indexOf("/category") !== -1) {
+          return this.goodsItem.price;
+        }
+      },
+
+      //根据当前路由显示不同的原价格
+      showOldPrice() {
+        if (this.$route.path.indexOf("/home") !== -1) {
+          return this.goodsItem.orgPrice;
+        } else if (this.$route.path.indexOf("/detail") !== -1) {
+          return '￥' + this.goodsItem.price;
+        } else if (this.$route.path.indexOf("/category") !== -1) {
+          return '￥' + this.goodsItem.orgPrice;
+        }
+      },
+    },
   methods: {
     imgLoad() {
       this.$bus.$emit("itemImageLoad");

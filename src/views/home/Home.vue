@@ -47,6 +47,7 @@ import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "commonjs/utils";
+import {itemImgListenerMixin} from "commonjs/mixin"
 export default {
   name: "Home",
   components: {
@@ -60,6 +61,7 @@ export default {
     Scroll,
     BackTop,
   },
+  mixins:[itemImgListenerMixin],
   data() {
     return {
       banners: [],
@@ -83,11 +85,7 @@ export default {
     this.getHomeGoods("sell");
   },
   mounted() {
-    const refresh = debounce(this.$refs.scroll.refresh);
-    this.$bus.$on("itemImageLoad", () => {
-      // console.log(this.debounce)
-      refresh();
-    });
+   
   },
   activated() {
     //一进入组件就滚动到离开时保存的位置
