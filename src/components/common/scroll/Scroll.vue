@@ -37,8 +37,8 @@ export default {
       this.scroll && this.scroll.refresh();
     },
     getScrollY() {
-        return this.scroll ? this.scroll.y : 0;
-      }
+      return this.scroll ? this.scroll.y : 0;
+    },
   },
   mounted() {
     this.scroll = new BScroll(this.$refs.warpper, {
@@ -49,10 +49,15 @@ export default {
     this.scroll.on("scroll", (position) => {
       this.$emit("scroll", position);
     });
-    this.scroll.on("pullingUp", () => {
-      this.$emit("pullingUp");
-    });
-    console.log(this.scroll);
+    if (this.pullUpLoad) {
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp");
+        setTimeout(() => {
+          //必须调用此方法才可以进行下次上拉,1.5秒可以拉取一次
+          this.scroll.finishPullUp();
+        }, 1500);
+      });
+    }
   },
 };
 </script>

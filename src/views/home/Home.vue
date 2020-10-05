@@ -43,11 +43,10 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "commonjs/utils";
-import {itemImgListenerMixin} from "commonjs/mixin"
+import {itemImgListenerMixin,backTopMixin} from "commonjs/mixin"
 export default {
   name: "Home",
   components: {
@@ -59,9 +58,8 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
   },
-  mixins:[itemImgListenerMixin],
+  mixins:[itemImgListenerMixin,backTopMixin],
   data() {
     return {
       banners: [],
@@ -72,7 +70,6 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isshow: false,
       tabOffSetTop: 0,
       isfixed: false,
       saveY:0
@@ -100,7 +97,6 @@ export default {
     //计算属性
 
     tabClick(index) {
-      console.log(index);
       switch (index) {
         case 0:
           this.currentType = "pop";
@@ -118,9 +114,7 @@ export default {
       this.getHomeGoods(this.currentType);
       //  this.$refs.scroll.scroll.refresh();
     },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0, 500);
-    },
+   
     contentScroll(position) {
       this.isshow = -position.y > 1000;
       this.isfixed = -position.y > this.tabOffSetTop;

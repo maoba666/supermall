@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" @titleClick="titleClick"></detail-nav-bar>
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"></detail-nav-bar>
 
     <scroll
       class="content"
@@ -10,6 +10,7 @@
       ref="scroll"
       @scroll="contentScroll"
     >
+    
       <detail-swiper :top-images="topImages"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
@@ -19,7 +20,8 @@
       <goods-list :goods="recommend" ref="goodsList"></goods-list>
     </scroll>
 
-    <detail-bottom-info></detail-bottom-info>
+    <detail-bottom-info @addCart="addCart"></detail-bottom-info>
+    <back-top v-show="isshow" @click.native="backClick"  />
   </div>
 </template>
 
@@ -38,8 +40,9 @@ import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
 import GoodsListItem from "components/content/goods/GoodsListItem";
 
-import { itemImgListenerMixin } from "commonjs/mixin";
+import { itemImgListenerMixin, backTopMixin } from "commonjs/mixin";
 import { debounce } from "commonjs/utils";
+import { TOP_DISTANCE } from "commonjs/const";
 
 import {
   getDetail,
@@ -66,7 +69,7 @@ export default {
     GoodsList,
     GoodsListItem,
   },
-  mixins: [itemImgListenerMixin],
+  mixins: [itemImgListenerMixin, backTopMixin],
   data() {
     return {
       iid: null,
@@ -80,6 +83,7 @@ export default {
       shopCart: {},
       themeTopYs: [],
       getThemeTopY: null,
+      titleCurrentIndex: 0,
     };
   },
   created() {
@@ -89,7 +93,6 @@ export default {
 
     //2、根据iid请求详情数据
     getDetail(this.iid).then((res) => {
-      console.log(res);
       const data = res.result;
       //1).获取轮播图片
       this.topImages = res.result.itemInfo.topImages;
@@ -109,7 +112,9 @@ export default {
         data.itemParams.rule
       );
       //6)保存评论信息
-      this.commentInfo = data.rate.list[0];
+     if (data.rate.cRate !== 0) {
+            this.commentInfo = data.rate.list[0];
+          }
     });
     //3、获取推荐数据
     getRecommend().then((res) => {
@@ -125,7 +130,6 @@ export default {
       this.themeTopYs.push(this.$refs.detailCommentInfo.$el.offsetTop);
       this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop);
       this.themeTopYs.push(Number.MAX_VALUE);
-      console.log(this.themeTopYs);
     }, 50);
   },
   methods: {
@@ -141,12 +145,32 @@ export default {
     contentScroll(position) {
       const positionY = -position.y;
       let length = this.themeTopYs.length;
-      for (let i = 0; i < length; i++) {
-        if( positionY > this.themeTopYs[i] > 0 && this.themeTopYs[i+1]){
-          console.log(i);
+      for (let i = 0; i < length - 1; i++) {
+        if (
+          this.currentIndex !== i &&
+          positionY >= this.themeTopYs[i] &&
+          positionY < this.themeTopYs[i + 1]
+        ) {
+          // console.log(i);
+          this.titleCurrentIndex = i;
+          this.$refs.nav.currentIndex = this.titleCurrentIndex;
         }
       }
+      this.isshow = position.y < -TOP_DISTANCE;
     },
+  addCart(){
+
+    const product = {}
+    product.iid = this.iid
+    product.image = this.topImages[0]
+    product.title = this.goods.title
+    product.name = this.shop.name
+    product.desc = this.goods.desc
+    product.realPrice = this.goods.realPrice  
+    this.$store.dispatch('addList',product).then(res => {
+      this.$toast.showToast(res, 500);
+    })
+  }
   },
   mounted() {},
   destroyed() {
@@ -168,6 +192,6 @@ export default {
 .content {
   position: relative;
   overflow: hidden;
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 49px);
 }
 </style>

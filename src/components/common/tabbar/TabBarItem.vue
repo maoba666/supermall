@@ -42,7 +42,6 @@ export default {
   methods: {
     itemClick() {
       this.$router.push(this.path);
-      console.log(111111111111);
     },
   },
 };
