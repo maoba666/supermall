@@ -12,6 +12,12 @@ Vue.use(VueLazyLoad)
 FastClick.attach(document.body)
 
 Vue.prototype.$bus = new Vue()
+router.beforeEach((to, meta, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next()
+})
 new Vue({
     render: h => h(App),
     store,

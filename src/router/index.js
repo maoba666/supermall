@@ -19,23 +19,38 @@ const routes = [{
     },
     {
         path: '/home',
-        component: Home
+        component: Home,
+        meta: {
+            title: '首页'
+        }
     },
     {
         path: '/category',
-        component: Category
+        component: Category,
+        meta: {
+            title: '商品分类'
+        }
     },
     {
         path: '/cart',
-        component: Cart
+        component: Cart,
+        meta: {
+            title: '购物车'
+        }
     },
     {
         path: '/profile',
-        component: Profile
+        component: Profile,
+        meta: {
+            title: '我'
+        }
     },
     {
         path: '/detail/:iid',
-        component: Detail
+        component: Detail,
+        meta: {
+            title: '商品详情'
+        }
     }
 ]
 const router = new Vuerouter({

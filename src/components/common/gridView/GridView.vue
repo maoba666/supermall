@@ -44,7 +44,7 @@
         let children = gridEl.children;
 
         // 2.设置gridEl的内边距
-        gridEl.style.padding = `${this.vMargin}px ${this.hMargin}px`
+        gridEl.style.padding = `${this.vMargin}px ${this.hMargin-1}px`
 
         // 3.计算item的宽度
         let itemWidth = (gridEl.clientWidth - 2 * this.hMargin - (this.cols - 1) * this.itemSpace) / this.cols;

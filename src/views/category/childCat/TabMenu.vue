@@ -55,7 +55,7 @@ export default {
   font-weight: 700;
   color: var(--color-high-text);
   background-color: #fff;
-  border-left: 0.8vw solid var(--color-high-text);
+  border-left: 2px solid var(--color-high-text)
 }
 .menu-list-item {
   height: 44px;

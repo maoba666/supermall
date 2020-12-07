@@ -51,11 +51,11 @@ export default {
 .tab-content-category {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px 8px;
+  padding: 0px 8px;
 }
 .item {
   width: 90px;
-  margin-left: 8px;
+  /* margin-left: 8px; */
   text-align: center;
   font-size: 12px;
 }
